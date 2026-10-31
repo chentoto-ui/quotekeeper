@@ -32,10 +32,9 @@ description: 依敏老師（麻醉專科護理師、講師）在 FB 粉專「女
 
 ### 1. 先確認主題（不清楚就先問）
 如果她只說「幫我寫週一的貼文」，先看 `references/topic-bank.md` 推薦 2～3 個主題讓她挑。
-如果她給了主題，直接確認三件事（可以一次問完）：
+如果她給了主題，直接確認兩件事（可以一次問完）：
 - 這篇是週幾？（決定用哪種貼文類型，見下表）
 - 有沒有想加的真實小故事或臨床觀察？（有真實經驗的貼文最動人）
-- 需不需要附「圖卡文字」？
 
 | 發文日 | 類型 | 重點 |
 |---|---|---|
@@ -136,7 +135,7 @@ description: 依敏老師（麻醉專科護理師、講師）在 FB 粉專「女
 （可直接複製的貼文全文，放在 code block 裡方便複製）
 
 ---
-📝 圖卡文字（如果她需要）
+📝 圖卡文字（每篇都要有）
 - 主標題：
 - 副標題：（例：看懂數字背後的意義，才是真正的健康管理）
 - 左／右區塊：比喻、代表、不代表的濃縮短句（每點 ≤ 15 字）
@@ -146,8 +145,9 @@ description: 依敏老師（麻醉專科護理師、講師）在 FB 粉專「女
 - 👩‍⚕️ Q版依敏：位置＋動作＋表情＋對話框（每張圖卡都要有，見下方說明）
 
 ✅ 安全檢查：已確認無業配感、無說教感、無個人診斷、數字為一般成人參考值、結尾有留言＋私訊呼籲
+🖼️ 圖卡：Canva 連結＋圖檔（照下方「每篇自動做圖卡」做好附上）
 ````
-最後問她一句：「語氣、長度、比喻有沒有想調整的地方？」
+最後問她一句：「語氣、長度、比喻、圖卡有沒有想調整的地方？」
 
 ## 圖卡上的 Q 版依敏（每張圖卡都要有）
 依敏有自己的 Q 版人物，原圖在 `assets/yimin-chibi.jpg`。
@@ -170,5 +170,27 @@ description: 依敏老師（麻醉專科護理師、講師）在 FB 粉專「女
 - **表情**：微笑、眨眼、驚訝、偷笑……配合貼文的幽默感
 - **對話框**（可選，≤ 12 字）：例如「可以補考喔！」「冰箱該整理囉～」
 
-**生圖提醒**：用 AI 生圖時，把 `assets/yimin-chibi.jpg` 當參考圖上傳，人物才不會每張長得不一樣。
-在 Canva 也可以先把這張圖去背，存成固定素材，每張圖卡直接拖進來換動作。
+## 每篇自動做圖卡（依敏選定的主力做法）
+依敏希望每篇貼文都附一張**專屬圖卡**，讓每篇都有記憶點，她只要複製文字、下載圖片就能發文。
+所以貼文寫好後，不用等她開口，直接用 Canva 生一張圖卡附上。
+**主角一定是她的 Q 版人物**（低馬尾＋深藍貓咪帽＋深綠刷手服＋聽診器），不能換成別的人物。
+
+**步驟**
+1. **準備參考圖**：用 Canva 的 `create-upload-url` 取得上傳網址，把 `assets/yimin-chibi.jpg` 的原始檔案內容用 POST 上傳（`Content-Type: application/octet-stream`），拿到 mediaId。
+   主題適合時，也可以多上傳 `yimin-chibi-teaching.png` 或 `yimin-chibi-anesthesia.png` 當第二張參考圖。
+   每個上傳網址只能用一次，每張圖都要重新申請。
+2. **生圖**：呼叫 Canva `generate-image`，`imageReferences` 放剛才的 mediaId（每張參考圖一個 MEDIA 項目），`aspectRatio` 用 `PORTRAIT_4_5`（手機滑 FB 時版面最大）。
+   prompt 用英文寫，照這個順序：
+   - 人物：「以參考圖的 Q 版女護理師為主角，外觀完全一致：brown hair in a low ponytail, big brown eyes, dark navy scrub cap with cute cat faces and polka dots (not flowers), dark green V-neck scrubs, black stethoscope」
+   - 她跟比喻互動的動作與表情（例：用力推塞爆的冰箱門、表情吃力又好笑）
+   - 畫面中的比喻物件（冰箱、成績單、搬家紙箱……）
+   - 風格：soft hand-drawn chibi illustration, beige background, muted sage green and soft pink palette, white sticker-style outline, leaves and small flowers decoration
+   - 文字：只放**主標題**（繁體中文，≤ 10 字），例如「何謂胰島素阻抗？」，最多再加一個短對話框。
+     AI 生圖寫中文很容易寫錯，所以長的說明文字留在貼文裡，不要塞進圖。簽名「預防勝於治療｜預防醫學｜營養醫學 ～依敏」也建議她在 Canva 用文字框疊上去，比較不會出錯。
+3. **等結果**：用 `get-generate-image-job` 查詢，PENDING 就等一下再查，直到成功或失敗。
+4. **交給她**：附上「Open generated image」的 Canva 連結，並把圖存成檔案傳給她。
+5. **請她檢查**：提醒她看兩件事：人物是不是低馬尾＋貓咪帽、圖上的中文字有沒有寫錯。不對就照她說的重畫。
+
+**連不上 Canva 時**：上傳出現 `CONNECT tunnel failed` 或 403，代表雲端環境的網路設定擋住了 `www.canva.com`。
+請她到對話上方的雲端環境選單 → Edit → Network access，把 `www.canva.com` 加進 Allowed domains。
+這段時間先交貼文和圖卡文字，等她改好再補圖。
